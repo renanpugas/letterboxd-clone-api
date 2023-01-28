@@ -1,0 +1,209 @@
+enum pronouns {
+    "They/their"
+    "He/his"
+    "He/their"
+    "She/her"
+    "She/their"
+    "Xe/xyr"
+    "Ze/hir"
+    "Ze/zir"
+    "It/its"
+}
+
+enum movie_roles {
+  "cast"
+  "director"
+  "producer"
+  "writer"
+  "editor"
+  "cinematography"
+  "production_design"
+  "art_direction"
+  "set_decoration"
+  "visual_effects"
+  "composer"
+  "sound"
+  "costumes"
+  "make_up"
+}
+
+enum ratings {
+  "0.5"
+  "1.0"
+  "1.5"
+  "2.0"
+  "2.5"
+  "3.0"
+  "3.5"
+  "4.0"
+  "4.5"
+  "5.0"
+}
+
+enum language_types {
+  "original"
+  "spoken"
+}
+
+Table user {
+  id SERIAL [pk]
+  username VARCHAR(30)
+  first_name VARCHAR(30)
+  last_name VARCHAR(30)
+  email VARCHAR(40)
+  location VARCHAR(50)
+  website VARCHAR(40)
+  bio VARCHAR(500)
+  pronoun pronouns
+  password VARCHAR(60)
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table administrator {
+  id SERIAL [pk]
+  username VARCHAR(30)
+  first_name VARCHAR(30)
+  last_name VARCHAR(30)
+  password VARCHAR(60)
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table session {
+  id SERIAL [PK]
+  user_id VARCHAR [ref: > user.id]
+  administrator_id VARCHAR [ref: > user.id]
+  token VARCHAR
+  last_time_hitted TIMESTAMP
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table movie {
+  id SERIAL [PK]
+  name VARCHAR(200)
+  release_date TIMESTAMP
+  tag_line VARCHAR(100)
+  synopsis VARCHAR(500)
+  runtime INTEGER
+  alternative_titles VARCHAR(2000)
+  imdb_link VARCHAR(200)
+  tmdb_link VARCHAR(200)
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table artist {
+  id SERIAL [PK]
+  name VARCHAR(200)
+  bio VARCHAR(500)
+  tmdb_link VARCHAR(200)
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table movie_artist {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  artist_id VARCHAR [ref: > artist.id]
+  role movie_roles
+  character_name VARCHAR(100)
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table studio {
+  id SERIAL [PK]
+  name VARCHAR(100)
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table movie_studio {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  studio_id VARCHAR [ref: > studio.id]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table country {
+  id SERIAL [PK]
+  name VARCHAR(30)
+  created_at TIMESTAMP
+}
+
+Table movie_country {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  country_id VARCHAR [ref: > country.id]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table language {
+  id SERIAL [PK]
+  name VARCHAR(30)
+  created_at TIMESTAMP
+}
+
+Table movie_language {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  language_id VARCHAR [ref: > language.id]
+  type language_types
+  created_at TIMESTAMP
+}
+
+Table genre {
+  id SERIAL [PK]
+  name VARCHAR(30)
+  created_at TIMESTAMP
+}
+
+Table movie_genre {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  genre_id VARCHAR [ref: > genre.id]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table movie_user {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  user_id VARCHAR [ref: > studio.id]
+  rating ratings
+  has_liked BOOLEAN
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table movie_user_log_entry {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  user_id VARCHAR [ref: > studio.id]
+  date TIMESTAMP
+  review VARCHAR(5000)
+  rating ratings
+  has_liked BOOLEAN
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
+
+Table movie_user_log_entry_review_like {
+  id SERIAL [PK]
+  movie_user_log_entry_id VARCHAR [ref: > movie_user_log_entry.id]
+  user_id VARCHAR [ref: > studio.id]
+  has_liked BOOLEAN
+  created_at TIMESTAMP
+}
+
+Table movie_user_watch_list {
+  id SERIAL [PK]
+  movie_id VARCHAR [ref: > movie.id]
+  user_id VARCHAR [ref: > studio.id]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+}
